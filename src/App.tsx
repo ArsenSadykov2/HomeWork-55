@@ -35,6 +35,19 @@ const App = () => {
     setIngredients(countIngredients );
   };
 
+  const DeleteIngred = (nameIngred: string) => {
+    let countIngredients  = ingredients.map(ingred => {
+      if(ingred.name === nameIngred && ingred.count !== 0) {
+        return {
+          ...ingred,
+          count: ingred.count - 1,
+        }
+      }
+      return ingred;
+    });
+    setIngredients(countIngredients );
+  }
+
   return (
     <div className="container my-3">
       <div className="row justify-content-between">
@@ -53,7 +66,8 @@ const App = () => {
             <div className="col">
               {ingredients.map(ingred => (
                   <p><strong>{ingred.name}</strong> x {ingred.count}
-                    <button className="deleteBtn"/>
+                    {ingred.count > 0}
+                    <button onClick={() => DeleteIngred(ingred.name)} className="deleteBtn"/>
                   </p>
               ))}
             </div>
