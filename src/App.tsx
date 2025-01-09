@@ -22,6 +22,8 @@ const App = () => {
       {name: 'Salad', count: 0},
   ]);
 
+  const [total, setTotal] = useState<number>(30);
+
   const AddIngred = (nameIngred: string) => {
     let countIngredients  = ingredients.map(ingred => {
       if(ingred.name === nameIngred) {
@@ -32,7 +34,17 @@ const App = () => {
       }
       return ingred;
     });
+
+    let totalPrice = INGREDIENTS.reduce((acc, ingredient) => {
+      countIngredients.forEach(ingred => {
+        if(ingredient.name === ingred.name && ingred.count !== 0) {
+          acc = acc + ingred.count * ingredient.price;
+        }
+      });
+      return acc;
+    }, 30);
     setIngredients(countIngredients );
+    setTotal(totalPrice);
   };
 
   const DeleteIngred = (nameIngred: string) => {
@@ -45,7 +57,17 @@ const App = () => {
       }
       return ingred;
     });
+    let totalPrice = INGREDIENTS.reduce((acc, ingredient) => {
+      countIngredients.forEach(ingred => {
+        if(ingredient.name === ingred.name && ingred.count !== 0) {
+          acc = acc + ingred.count * ingredient.price;
+        }
+      });
+      return acc;
+    }, 30);
+
     setIngredients(countIngredients );
+    setTotal(totalPrice);
   }
 
   return (
@@ -59,6 +81,7 @@ const App = () => {
                   <div key={ingred.name} className="mb-2">
                     <button onClick={() => AddIngred(ingred.name)} type="button" className="border-1 bg-white">
                       <img width={60} src={ingred.image} alt={ingred.name} />
+                      {ingred.price}
                     </button>
                   </div>
               ))}
@@ -86,7 +109,7 @@ const App = () => {
             <div className="BreadBottom"></div>
           </div>
           <div>
-            <h5>Price:</h5>
+            <h5>Price:{total}</h5>
           </div>
         </div>
       </div>
