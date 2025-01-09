@@ -1,0 +1,7 @@
+.deleteBtn {
+    margin: 15px;
+    border: 1px solid #f8f6f6;
+    padding: 10px;
+    background: url("assets/delete.png") center center no-repeat;
+    background-size: cover;
+}

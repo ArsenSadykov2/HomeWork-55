@@ -23,7 +23,7 @@ const App = () => {
   ]);
 
   const AddIngred = (nameIngred: string) => {
-    let newIngredCountArrToState = ingredients.map(ingred => {
+    let countIngredients  = ingredients.map(ingred => {
       if(ingred.name === nameIngred) {
         return {
           ...ingred,
@@ -31,7 +31,8 @@ const App = () => {
         }
       }
       return ingred;
-    })
+    });
+    setIngredients(countIngredients );
   };
 
   return (
@@ -39,13 +40,24 @@ const App = () => {
       <div className="row justify-content-between">
         <div className="border border-black col me-3">
           <h5 className="mt-2">Ingredients</h5>
-          {INGREDIENTS.map((ingred) => (
-              <div key={ingred.name} className="mb-2">
-                <button onClick={() => AddIngred(ingred.name)} type="button" className="border-1 bg-white">
-                  <img width={60} src={ingred.image} alt={ingred.name} />
-                </button>
-              </div>
-          ))}
+          <div className="row row-cols-2">
+            <div className="col">
+              {INGREDIENTS.map((ingred) => (
+                  <div key={ingred.name} className="mb-2">
+                    <button onClick={() => AddIngred(ingred.name)} type="button" className="border-1 bg-white">
+                      <img width={60} src={ingred.image} alt={ingred.name} />
+                    </button>
+                  </div>
+              ))}
+            </div>
+            <div className="col">
+              {ingredients.map(ingred => (
+                  <p><strong>{ingred.name}</strong> x {ingred.count}
+                    <button className="deleteBtn"/>
+                  </p>
+              ))}
+            </div>
+          </div>
           <hr/>
         </div>
         <div className="border border-black col align-self-center">
