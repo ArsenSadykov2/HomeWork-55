@@ -4,7 +4,7 @@ import cheese from './assets/cheese.png';
 import bacon from './assets/bacon.png';
 import salad from './assets/salad.png';
 import {Ingredients} from "./types";
-import {useState} from "react";
+import React, {useCallback, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -24,8 +24,9 @@ const App = () => {
 
   const [total, setTotal] = useState<number>(30);
 
-  const AddIngred = (nameIngred: string) => {
-    let countIngredients  = ingredients.map(ingred => {
+
+  const AddIngredient = (nameIngred: string) => {
+    const countIngredients  = ingredients.map(ingred => {
       if(ingred.name === nameIngred) {
         return {
           ...ingred,
@@ -34,21 +35,30 @@ const App = () => {
       }
       return ingred;
     });
-
-    let totalPrice = INGREDIENTS.reduce((acc, ingredient) => {
-      countIngredients.forEach(ingred => {
-        if(ingredient.name === ingred.name && ingred.count !== 0) {
-          acc = acc + ingred.count * ingredient.price;
-        }
-      });
-      return acc;
-    }, 30);
     setIngredients(countIngredients );
-    setTotal(totalPrice);
   };
 
-  const DeleteIngred = (nameIngred: string) => {
-    let countIngredients  = ingredients.map(ingred => {
+  const getBurger = () => {
+    const elements= [];
+
+    for (let i = 0; i < ingredients.length; i++) {
+      const ingredient = ingredients[i];
+
+      for (let j = 0; j < ingredient.count; j++) {
+        elements.push(
+            React.createElement('div', {
+              key: `${ingredient.name}`,
+              className: ingredient.name,
+            })
+        );
+      }
+    }
+
+    return elements;
+  };
+
+  const DeleteIngredient = (nameIngred: string) => {
+    const countIngredients  = ingredients.map(ingred => {
       if(ingred.name === nameIngred && ingred.count !== 0) {
         return {
           ...ingred,
@@ -57,18 +67,26 @@ const App = () => {
       }
       return ingred;
     });
-    let totalPrice = INGREDIENTS.reduce((acc, ingredient) => {
-      countIngredients.forEach(ingred => {
-        if(ingredient.name === ingred.name && ingred.count !== 0) {
-          acc = acc + ingred.count * ingredient.price;
-        }
-      });
+
+    setIngredients(countIngredients);
+  }
+
+
+  const calculateTotalPrice = useCallback(() => {
+    const totalPrice = INGREDIENTS.reduce((acc, ingredient) => {
+      const ingredientInBurger = ingredients.find(i => i.name === ingredient.name);
+      if (ingredientInBurger) {
+        acc += ingredientInBurger.count * ingredient.price;
+      }
       return acc;
     }, 30);
 
-    setIngredients(countIngredients );
     setTotal(totalPrice);
-  }
+  }, [ingredients, INGREDIENTS]);
+
+  React.useEffect(() => {
+    calculateTotalPrice();
+  }, [ingredients, calculateTotalPrice]);
 
   return (
     <div className="container my-3">
@@ -79,8 +97,8 @@ const App = () => {
             <div className="col">
               {INGREDIENTS.map((ingred) => (
                   <div key={ingred.name} className="mb-2">
-                    <button onClick={() => AddIngred(ingred.name)} type="button" className="border-1 bg-white">
-                      <img width={60} src={ingred.image} alt={ingred.name} />
+                    <button onClick={() => AddIngredient(ingred.name)} type="button" className="border-1 bg-white">
+                      <img width={60} src={ingred.image} alt={ingred.name}/>
                       {ingred.price}
                     </button>
                   </div>
@@ -89,8 +107,8 @@ const App = () => {
             <div className="col">
               {ingredients.map(ingred => (
                   <p><strong>{ingred.name}</strong> x {ingred.count}
-                    {ingred.count > 0}
-                    <button onClick={() => DeleteIngred(ingred.name)} className="deleteBtn"/>
+                    {ingred.count >= 0}
+                    <button onClick={() => DeleteIngredient(ingred.name)} className="deleteBtn"/>
                   </p>
               ))}
             </div>
@@ -98,18 +116,15 @@ const App = () => {
           <hr/>
         </div>
         <div className="border border-black col align-self-center">
-          <h5 className="mt-2">Burger</h5>
+          <h4 className="mt-2">Burger</h4>
           <hr/>
           <div className="Burger">
-            <div className="BreadTop">
-              <div className="Seeds1"></div>
-              <div className="Seeds2"></div>
-            </div>
-            Здесь будет рисовать начинка
+            <div className="BreadTop"></div>
+            {getBurger()}
             <div className="BreadBottom"></div>
           </div>
           <div>
-            <h5>Price:{total}</h5>
+            <h5>Price: {total}</h5>
           </div>
         </div>
       </div>
