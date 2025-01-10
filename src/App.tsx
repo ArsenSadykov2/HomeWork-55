@@ -89,10 +89,10 @@ const App = () => {
   }, [ingredients, calculateTotalPrice]);
 
   return (
-    <div className="container my-3">
+    <div className="container my-2">
       <div className="row justify-content-between">
-        <div className="border border-black col me-3">
-          <h5 className="mt-2">Ingredients</h5>
+        <div className="border border-black col m-2">
+          <h5 className="mt-2">INGREDIENTS</h5>
           <div className="row row-cols-2">
             <div className="col">
               {INGREDIENTS.map((ingred) => (
@@ -115,8 +115,8 @@ const App = () => {
           </div>
           <hr/>
         </div>
-        <div className="border border-black col align-self-center">
-          <h4 className="mt-2">Burger</h4>
+        <div className="border border-black col align-self-center bg-black">
+          <h4 className="mt-2 text-primary">BURGER</h4>
           <hr/>
           <div className="Burger">
             <div className="BreadTop"></div>
@@ -124,7 +124,7 @@ const App = () => {
             <div className="BreadBottom"></div>
           </div>
           <div>
-            <h5>Price: {total}</h5>
+            <h5 className="text-primary">Price: {total}</h5>
           </div>
         </div>
       </div>
